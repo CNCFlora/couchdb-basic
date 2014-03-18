@@ -1,6 +1,4 @@
-config.yml
 .vagrant
 *.swp
-*.war
-*.log
 *~
+*.gem
