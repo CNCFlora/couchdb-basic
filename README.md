@@ -6,6 +6,15 @@
 ####Below, follow the step-by-step how to create, edit, delete and view couchdb documents. Before the example itself, follows the prerequisites to run the example.
 
 ##Pre Requisite.
+####Install ruby, couchdb.
+`sudo apt-get install ruby`
+`sudo apt-get install couchdb`
+
+####Start couchdb
+`sudo service couchdb start`
+
+####Install couchdb_basic gem
+`gem install couchdb_basic`
 
 ##Example code.
 ```
