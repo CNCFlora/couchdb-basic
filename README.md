@@ -14,6 +14,8 @@
 ####Start couchdb
 `sudo service couchdb start`
 
+#####Create a database instance in Futon Couchdb. In the example, there is a "database_test".
+
 ####Install couchdb_basic gem
 `gem install couchdb_basic`
 
