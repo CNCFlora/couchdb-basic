@@ -1,4 +1,4 @@
 couchdb-basic
 =============
 
-Basic CouchDB gem.
+#Example of use couchdb_basic gem.
