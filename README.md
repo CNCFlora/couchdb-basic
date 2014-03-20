@@ -8,7 +8,7 @@
 ##Pre Requisite.
 
 ##Example code.
-'require 'couchdb_basic'
+'require "couchdb_basic"
   2 
   3 #  Create a instance of database.
   4 db = Couchdb.new "http://localhost:5984/database_test"
