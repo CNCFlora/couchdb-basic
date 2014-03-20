@@ -8,6 +8,7 @@
 ##Pre Requisite.
 ####Install ruby, couchdb.
 `sudo apt-get install ruby`
+
 `sudo apt-get install couchdb`
 
 ####Start couchdb
@@ -56,3 +57,6 @@
  36 teste = db.get_all()
  37 puts "docs = #{docs}"
 ```
+
+###License
+####Apache License 2.0
