@@ -45,6 +45,21 @@ describe "CouchDB abstraction layer" do
       expect( @couch.get_all().length  ).to eq(2)
     end
 
+    it "Can get all documents with skipe and limit parameters." do
+        hash = []
+        (0..14).each do |t|
+            hash.push( @couch.create( { :foo=>"foo#{t}",:bar=>"bar#{t}" } ) )
+        end
+
+        array = @couch.get_all( { :skip=>5,:limit=>5 } )
+        expect( array ).to include( 
+                { :_id=>hash[5][:_id],:_rev=>hash[5][:_rev],:foo=>"foo5",:bar=>"bar5" }, 
+                { :_id=>hash[6][:_id],:_rev=>hash[6][:_rev],:foo=>"foo6",:bar=>"bar6" },
+                { :_id=>hash[7][:_id],:_rev=>hash[7][:_rev],:foo=>"foo7",:bar=>"bar7" },
+                { :_id=>hash[8][:_id],:_rev=>hash[8][:_rev],:foo=>"foo8",:bar=>"bar8" },
+                { :_id=>hash[9][:_id],:_rev=>hash[9][:_rev],:foo=>"foo9",:bar=>"bar9" }
+        )
+    end
 
     it "Can insert bulk on database" do
       docs = [ {:foo => "foo1", :bar => "bar1"}, {:foo => "foo2", :bar => "bar2"} ]
@@ -75,4 +90,5 @@ describe "CouchDB abstraction layer" do
     end
 
 end
+
 

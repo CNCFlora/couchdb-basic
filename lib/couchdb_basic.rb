@@ -82,9 +82,19 @@ class Couchdb
         _get(url)[:rows]
     end
 
-    def get_all() 
+    def get_all(args={})
+        url = "/_all_docs?include_docs=true"
+        if args.has_key?( :skip )
+            skip = MultiJson.dump( args[:skip] )
+            url << "&skip=#{skip}"
+        end
+        if args.has_key?( :limit )
+            limit = MultiJson.dump( args[:limit] )
+            url << "&limit=#{limit}"
+        end
         docs = []
-        _get("/_all_docs?include_docs=true")[:rows].each{ | row | docs << row[:doc ] }
+        _get(url)[:rows].each{ | row | docs << row[:doc ] }
         docs
     end
+
 end
