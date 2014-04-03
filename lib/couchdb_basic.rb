@@ -1,6 +1,30 @@
-require 'multi_json'
-require 'rest-client'
-require 'uri-handler'
+
+require 'json'
+require 'uri'
+require 'net/http'
+
+def http_get(uri)
+    JSON.parse(Net::HTTP.get(URI(uri)), :symbolize_names=>true)
+end
+
+def http_delete(uri)
+    uri = URI.parse(uri)
+    header = {'Content-Type'=> 'application/json'}
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Delete.new(uri.request_uri, header)
+    response = http.request(request)
+    JSON.parse(response.body, :symbolize_names=>true)
+end
+
+def http_post(uri,doc) 
+    uri = URI.parse(uri)
+    header = {'Content-Type'=> 'application/json'}
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Post.new(uri.request_uri, header)
+    request.body = doc.to_json
+    response = http.request(request)
+    JSON.parse(response.body,:symbolize_names=>true)
+end
 
 class Couchdb
 
@@ -9,8 +33,7 @@ class Couchdb
     end
 
     def _get(url="")
-        r = RestClient.get "#{@url}#{url}"
-        MultiJson.load(r.to_str, :symbolize_keys => true)
+        http_get "#{@url}#{url}"
     end
 
     def _post(data,bulk=false)
@@ -19,12 +42,12 @@ class Couchdb
             if bulk
               url = "#{url}/_bulk_docs"
             end
-            r = RestClient.post "#{url}", MultiJson.dump(data), :content_type => :json, :accept => :json
-        rescue RestClient::Forbidden => e
+            r = http_post(url,data)
+        rescue Net::HTTPBadRequest => e
             puts e.response.to_str
-            r = e.response
+            r = nil
         end
-        MultiJson.load(r.to_str, :symbolize_keys => true)
+        r
     end
 
     def db()
@@ -50,51 +73,34 @@ class Couchdb
     end
 
     def get(id)
-        begin
-            _get "/#{id.to_uri}"
-        rescue RestClient::ResourceNotFound
+        doc = _get "/#{URI.escape(id)}"
+        if doc[:error] 
             nil
-        rescue RestClient::BadRequest => e
-            puts e.response.to_str
-            nil
+        else
+            doc
         end
     end
 
     def delete(doc)
-        r = RestClient.delete "#{@url}/#{doc[:_id]}?rev=#{doc[:_rev]}", :content_type => :json
+        r = http_delete "#{@url}/#{URI.escape( doc[:_id] )}?rev=#{doc[:_rev]}"
         nil
     end
 
     def view(design,view,args={})
         url = "/_design/#{design}/_view/#{view}?"
-        if args.has_key?(:key)
-            key = MultiJson.dump(args[:key]).to_uri
-            url << "&key=#{key}"
-        end
-        if args.has_key?(:group)
-            key = MultiJson.dump(args[:group]).to_uri
-            url << "&group=#{key}"
-        end
-        if args.has_key?(:reduce)
-            key = MultiJson.dump(args[:reduce]).to_uri
-            url << "&reduce=#{key}"
-        end
+        args.keys.each { |k| 
+            url << "&#{k}=#{URI.escape(args[k].to_json)}"
+        }
         _get(url)[:rows]
     end
 
     def get_all(args={})
         url = "/_all_docs?include_docs=true"
-        if args.has_key?( :skip )
-            skip = MultiJson.dump( args[:skip] )
-            url << "&skip=#{skip}"
-        end
-        if args.has_key?( :limit )
-            limit = MultiJson.dump( args[:limit] )
-            url << "&limit=#{limit}"
-        end
-        docs = []
-        _get(url)[:rows].each{ | row | docs << row[:doc ] }
-        docs
+        args.keys.each { |k| 
+            url << "&#{k}=#{URI.escape(args[k].to_json)}"
+        }
+        _get(url)[:rows].map {|row| row[:doc]}
     end
 
 end
+

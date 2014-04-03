@@ -69,13 +69,9 @@ describe "CouchDB abstraction layer" do
 
 
     it "Can query views" do
-        begin
-            design  = {:_id => "_design/test", 
-                       :views => {:by_type => {:map => "function(doc) { emit(doc.metadata.type,doc); }"}}};
-            @couch.create(design)
-        rescue RestClient::Conflict
-            print "view already exists"
-        end
+        design  = {:_id => "_design/test", 
+                   :views => {:by_type => {:map => "function(doc) { emit(doc.metadata.type,doc); }"}}};
+        a=@couch.create(design)
 
         doc = @couch.create({:metadata => {:type => "assessment"}, :foo => "bar"})
 
