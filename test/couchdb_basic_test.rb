@@ -4,7 +4,7 @@ require 'rspec'
 describe "CouchDB abstraction layer" do
 
     before(:each) do
-        @url = "http://192.168.50.23:5984/test"
+        @url = "http://localhost:5984/test"
         @couch = Couchdb.new @url
     end
 

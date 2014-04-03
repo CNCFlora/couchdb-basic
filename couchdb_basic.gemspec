@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
     s.name        = "couchdb_basic"
-    s.version     = "0.0.2.beta"
-    s.date        = "2014-03-18"
+    s.version     = "0.0.3"
+    s.date        = "2014-04-02"
     s.summary     = "A basic couchdb database lib."
     s.description = "A lib for documents database operations."
     s.authors     = ["Diogo Silva", "Bruno Giminiani"]

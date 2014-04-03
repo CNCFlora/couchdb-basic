@@ -1,25 +1,18 @@
 #couchdb-basic
-=============
 
-##Example of use couchdb_basic gem.
+##Example of use couchdb\_basic gem.
 
-####Below, follow the step-by-step how to create, edit, delete and view couchdb documents. Before the example itself, follows the prerequisites to run the example.
+Below, follow the step-by-step how to create, edit, delete and view couchdb documents. Before the example itself, please follow the prerequisites to run the example.
 
-##Pre Requisite.
-####Install ruby, couchdb.
-`sudo apt-get install ruby`
-
-`sudo apt-get install couchdb`
-
-####Start couchdb
+###Install ruby, couchdb and the gem.
+`sudo apt-get install ruby couchdb`
 `sudo service couchdb start`
+`gem install couchdb\_basic`
 
-#####Create a database instance in Futon Couchdb. In the example, there is a "database_test".
+##Create a database instance in Futon Couchdb. In the example, there is a "database\_test".
 
-####Install couchdb_basic gem
-`gem install couchdb_basic`
+Example code:
 
-##Example code.
 ```
   1 require "couchdb_basic"
   2 
@@ -60,5 +53,7 @@
  37 puts "docs = #{docs}"
 ```
 
-###License
-####Apache License 2.0
+##License
+
+Apache License 2.0
+
